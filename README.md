@@ -1,3 +1,2 @@
 fujishige-shooting
 ==================
-fujiiii
