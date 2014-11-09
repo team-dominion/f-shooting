@@ -1,2 +1,0 @@
-fujishige-shooting
-==================
