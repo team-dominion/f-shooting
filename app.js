@@ -1,10 +1,12 @@
 var app = require('http').createServer(handler),
     io = require('socket.io').listen(app),
     fs = require('fs');
-app.listen(1337, '127.0.0.1');
+app.listen(1337);
+
+io.set('log level', 1);
 
 function handler(req, res){
-  fs.readFile('./index.html', function(err, data) {
+  fs.readFile(__dirname + '/index.html', function(err, data) {
     if (err) {
       res.writeHead(500);
       return res.end('Error');
@@ -17,6 +19,10 @@ function handler(req, res){
 
 io.sockets.on('connection', function(socket){
   socket.on('emit_from_client', function(data){
-    socket.emit('emit_from_server', 'hello from server: ' + data);
+    //console.log(data);
+    socket.set('client_name', data.msg2);
+    socket.get('client_name', function(err, name){
+    io.sockets.emit('emit_from_server', '[' + msg2 + ']: ' + data);
+    });
   });
 });
