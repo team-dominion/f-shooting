@@ -27,8 +27,6 @@ function drawPlayer(posx, posy, canvas){
 	ctxCanvas.beginPath();
 	ctxCanvas.arc(posx, posy, 20, 0, Math.PI*2, false);
 	ctxCanvas.stroke();
-	console.log(posx);
-	console.log(posy);
 };
 
 

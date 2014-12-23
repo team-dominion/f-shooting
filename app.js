@@ -1,22 +1,16 @@
-var app = require('http').createServer(handler),
-    io = require('socket.io').listen(app),
+var express = require('express'),
+    exp = express(),
+    server = require('http').createServer(exp),
+    io = require('socket.io').listen(server),
     fs = require('fs');
-app.listen(1337, '127.0.0.1');
+server.listen(3000);
 
-function handler(req, res){
-  fs.readFile('./index.html', function(err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error');
-    }
-    res.writeHead(200);
-    res.write(data);
-    res.end();
-  })
-}
+exp.use(express.static(__dirname + '/public'));
 
 io.sockets.on('connection', function(socket){
   socket.on('emit_from_client', function(data){
     socket.emit('emit_from_server', 'hello from server: ' + data);
   });
 });
+
+console.log('server start!!');

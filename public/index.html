@@ -5,7 +5,7 @@
 	<title>Socket.io</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="draw.js" width="140" height="140"></script>
+	<script src="draw.js"></script>
 </head>
 <body>
 	<div id="wrap">
@@ -17,7 +17,7 @@
 				<canvas id="player2" width="498" height="500"></canvas>
 			</div>
 		</div>
-		<form id="myform">
+		<form id="myForm">
 			<input type="text" id="msg"><input type="submit" value="Send!">
 		</form>
 		<ul id="logs"></ul>
@@ -29,9 +29,10 @@
 			$('#myForm').submit(function(e){
 				e.preventDefault();
 				socket.emit('emit_from_client', $('#msg').val());
+				$('#msg').val('').focus();
 			});
 			socket.on('emit_from_server', function(data){
-				$('logs').append($('<li>').text(data));
+				$('#logs').append($('<li>').text(data));
 			});
 		});
 	</script>
