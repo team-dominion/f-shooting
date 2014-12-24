@@ -9,8 +9,8 @@ exp.use(express.static(__dirname + '/public'));
 
 io.sockets.on('connection', function(socket){
   socket.on('emit_from_client', function(data){
-    socket.emit('emit_from_server', 'hello from server: ' + data);
+    io.sockets.emit('emit_from_server', 'hello from server: ' + data);
   });
-});
+})
 
 console.log('server start!!');

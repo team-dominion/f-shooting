@@ -34,19 +34,19 @@ function Controler(){
 	$(window).keyup(function(e){
 		//左が押されたとき
 		if(e.keyCode == 37 && player1.posx > 40){
-				player1.posx -= 30;
+				player1.posx -= 45;
 		}
 		//右が押されたとき
 		if(e.keyCode == 39 && player1.posx < 460){
-			player1.posx += 30;
+			player1.posx += 45;
 		}
 		//上が押されたとき
 		if(e.keyCode == 38 && player1.posy > 40){
-			player1.posy -= 30;
+			player1.posy -= 45;
 		}
 		//下が押されたとき
 		if(e.keyCode == 40 && player1.posy < 460){
-			player1.posy += 30;
+			player1.posy += 45;
 		}
 		//描画
 		drawPlayer(player1.posx, player1.posy, player1.canvas);
