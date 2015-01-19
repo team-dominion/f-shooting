@@ -12,7 +12,7 @@ var canvas, ctx;	//	わかんない
 const FPS = 30;			    	// １秒間の描画の回数
 const MSPF = 1000 / FPS;		// １フレームの時間
 var set_time;                   // 1フレーム開始時の時間
-var end_time;     　　　　　　　　　　　　// 1フレームにかかった時間
+var end_time;     　　　　　　　　// 1フレームにかかった時間
 var count = 0;					// フレーム回数
 // ...
 
@@ -136,31 +136,6 @@ function drawPlayer(posx, posy, canvas){
 	//console.log(posy);
 };
 
-/*
-function Controler(){
-	$(window).keyup(function(e){
-		//左が押されたとき
-		if(e.keyCode == 37 && player1.posx > 40){
-				player1.posx -= 30;
-		}
-		//右が押されたとき
-		if(e.keyCode == 39 && player1.posx < 460){
-			player1.posx += 30;
-		}
-		//上が押されたとき
-		if(e.keyCode == 38 && player1.posy > 40){
-			player1.posy -= 30;
-		}
-		//下が押されたとき
-		if(e.keyCode == 40 && player1.posy < 460){
-			player1.posy += 30;
-		}
-		//描画
-		//drawPlayer(player1.posx, player1.posy, player1.canvas);
-	});
-};
-*/
-
 function Controler(){
 
 	//	キーが押されたとき？
@@ -185,9 +160,6 @@ function Controler(){
 		if (e.keyCode == 40) {
 			down_flag = 1;	//　↓ キーフラグをオン
 		}
-
-		//描画
-		//drawPlayer(player1.posx, player1.posy, player1.canvas);
 	});
 
 	// キーが離されたとき？
@@ -212,9 +184,6 @@ function Controler(){
 		if (e.keyCode == 40) {
 			down_flag = 0;	//　↓ キーフラグをオフ
 		}
-
-		//描画
-		//drawPlayer(player1.posx, player1.posy, player1.canvas);
 	});
 
 };
