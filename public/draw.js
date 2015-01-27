@@ -1,11 +1,7 @@
 /****************************
 *    javascript draw.js 	*
-*    FPSと滑らかな移動の実装		*
+*    FPSと滑らかな移動の実装   *
 *****************************/
-
-
-// 全体で使用する変数を定義
-var canvas, ctx;	//	わかんない
 
 
 // FPS管理に使用するパラメータを定義
@@ -28,7 +24,7 @@ const  MOVE = 5;	//	移動量
 
 
 // 宣言
-var player = function(posx, posy, canvas) {
+player = function(posx, posy, canvas) {
     this.posx         = posx;	
     this.posy         = posy;
     this.canvas       = canvas;
@@ -40,9 +36,6 @@ var player = function(posx, posy, canvas) {
 $(function(){
 	player1 = new player(250, 250, $('#player1').get(0));	//	プレイヤー１の定義
 	player2 = new player(250, 250, $('#player2').get(0));	//	プレイヤー２の定義
-
-	// drawPlayer(player1.posx, player1.posy, player1.canvas);
-	// drawPlayer(player2.posx, player2.posy, player2.canvas);
 
 	mainloop();
 	Controler();
@@ -97,10 +90,10 @@ var mainloop = function() {
 //	描画関数を定義
 function redraw() {
 
-	// プレイヤー１の描画？
+	// プレイヤー１の描画
 	drawPlayer(player1.posx, player1.posy, player1.canvas);
 
-	// プレイヤー2の描画？
+	// プレイヤー2の描画
 	drawPlayer(player2.posx, player2.posy, player2.canvas);
 
 	end_time = new Date();
@@ -120,7 +113,7 @@ function redraw() {
 };
 
 
-//	わかんないです
+//	描画処理の定義
 function drawPlayer(posx, posy, canvas){
 	if(!canvas || !canvas.getContext){
 		console.log("false");
