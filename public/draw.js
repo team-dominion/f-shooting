@@ -24,18 +24,22 @@ const  MOVE = 5;	//	移動量
 
 
 // 宣言
-player = function(posx, posy, canvas) {
+player = function(posx, posy) {
     this.posx         = posx;	
     this.posy         = posy;
-    this.canvas       = canvas;
 }
 // ...
 
 
 // MAIN
 $(function(){
-	player1 = new player(250, 250, $('#player1').get(0));	//	プレイヤー１の定義
-	player2 = new player(250, 250, $('#player2').get(0));	//	プレイヤー２の定義
+	// canvas定義
+	playGround = $('#play-ground').get(0);
+	ctxCanvas = playGround.getContext('2d');
+
+	// プレイヤー定義
+	player1 = new player(250, 250);
+	player2 = new player(750, 250);
 
 	mainloop();
 	Controler();
@@ -90,11 +94,12 @@ var mainloop = function() {
 //	描画関数を定義
 function redraw() {
 
-	// プレイヤー１の描画
-	drawPlayer(player1.posx, player1.posy, player1.canvas);
+	// 描画リセット
+	ctxCanvas.clearRect(0,0,playGround.width,playGround.height);
 
-	// プレイヤー2の描画
-	drawPlayer(player2.posx, player2.posy, player2.canvas);
+	// プレイヤーの描画
+	drawPlayer(player1.posx, player1.posy);
+	drawPlayer(player2.posx, player2.posy);
 
 	end_time = new Date();
 
@@ -114,19 +119,16 @@ function redraw() {
 
 
 //	描画処理の定義
-function drawPlayer(posx, posy, canvas){
-	if(!canvas || !canvas.getContext){
+function drawPlayer(posx, posy){
+	if(!playGround || !playGround.getContext){
 		console.log("false");
 		return false;
 	};
 
-	var ctxCanvas = canvas.getContext('2d');
-	ctxCanvas.clearRect(0,0,canvas.width,canvas.height);
 	ctxCanvas.beginPath();
 	ctxCanvas.arc(posx, posy, 20, 0, Math.PI*2, false);
 	ctxCanvas.stroke();
-	//console.log(posx);
-	//console.log(posy);
+	
 };
 
 function Controler(){
