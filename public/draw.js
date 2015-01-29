@@ -66,11 +66,8 @@ var mainloop = function() {
 	/*--------------------------------------------------*/
     start_time = new Date();
     /* frame_start */
-
-
     update();	//更新
     draw();		//描画
-
 
     /* frame_end */
     delta_time = (new Date()) - start_time;
@@ -154,7 +151,7 @@ function drawPlayer(posx, posy){
 function Controler(){
 
 	//	キーが押されたとき
-	$(window).keydown(function(e) {
+	onkeydown = function(e) {
 
 		//　← キー
 		if (e.keyCode == 37 && !left_flag) {
@@ -190,10 +187,10 @@ function Controler(){
 			_bullet.posx = player1.posx;
 			_bullet.posy = player1.posy;
 		}
-	});
+	};
 
 	// キーが離されたとき
-	$(window).keyup(function(e){
+	onkeyup = function(e){
 
 		//　← キー
 		if (e.keyCode == 37) {
@@ -215,7 +212,7 @@ function Controler(){
 			down_flag = false;	
 		}
 
-	});
+	};
 
 };
 
@@ -251,3 +248,13 @@ function update() {
 	} else { bullet_flag = false; }
 
 };
+
+document.addEventListener("keydown",onKeyDown,false);
+document.addEventListener("keyup",onKeyUp,false);
+
+// サーバーとの同期
+// function communicateWithServer(){
+// 	//座標の送信
+// 	var socket = io.connect();
+// 	socket.emit('send_position', player1);
+// }
