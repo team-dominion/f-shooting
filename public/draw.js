@@ -1,37 +1,46 @@
-/****************************
-*    javascript draw.js 	*
-*    FPSと滑らかな移動の実装   *
-*****************************/
+/*************************
+*   Fugishige_shooting   *
+*************************/
 
+/* player_speed */
+const  MOVE = 5;
 
-// FPS管理に使用するパラメータを定義
-const FPS = 30;			    	// １秒間の描画の回数
-const MSPF = 1000 / FPS;		// １フレームの時間
-var set_time;                   // 1フレーム開始時の時間
-var end_time;     　　　　　　　　// 1フレームにかかった時間
-var count = 0;					// フレーム回数
-// ...
+/* fps-parameter */
+const FPS = 30;			    // １秒間の描画の回数
+const MSPF = 1000 / FPS;	// １フレームの時間
+var set_time;               // 1フレーム開始時の時間
+var end_time;     　　　　　　　	// 1フレームにかかった時間
+var count = 0;				// フレーム回数
 
+var start_time;				//フレーム開始時の時間
+var delta_time;				//1フレームにかかった時間
+var interval;  				//1フレームの時間 - 1フレームにかかった時間
 
-//	キー入力のフラグ
-var up_flag = 0;	//　↑ キーの入力フラグ
-var down_flag = 0;	//　↓ キーの入力フラグ
-var right_flag = 0;	//　→ キーの入力フラグ
-var left_flag = 0;	// ← キーの入力フラグ
-// ...
+/* input_key_flag */
+var up_flag 	= false;	
+var down_flag 	= false;	
+var right_flag 	= false;	
+var left_flag 	= false;
 
-const  MOVE = 5;	//	移動量
+/* */
+var bullet_flag = false;	
 
-
-// 宣言
+/* playerの定義 */
 player = function(posx, posy) {
     this.posx         = posx;	
     this.posy         = posy;
 }
-// ...
+
+bullet = function(posx, posy) {
+	this.posx = posx;
+	this.posy = posy;
+}
 
 
-// MAIN
+
+/*=============================================================================================*/
+
+/* MAIN */
 $(function(){
 	// canvas定義
 	playGround = $('#play-ground').get(0);
@@ -40,36 +49,33 @@ $(function(){
 	// プレイヤー定義
 	player1 = new player(250, 250);
 	player2 = new player(750, 250);
+	_bullet = new bullet(0, 0);
 
 	mainloop();
 	Controler();
 });
 
-
-// メインループを定義
+/* main_loop */
 var mainloop = function() {
 
-	//　1フレーム開始時の時間をとる
+	/* frame_config */
 	if (count == 0) { set_time = new Date(); }
 
-	//	フレーム数を増やす
-	count++;
 
-    // 処理開始時間を保存
-    var startTime = new Date();
 
-    //　移動処理
-    move();
+	/*--------------------------------------------------*/
+    start_time = new Date();
+    /* frame_start */
 
-    // 描画処理
-    redraw();
 
-    // 処理経過時間の保存
-    var deltaTime = (new Date()) - startTime;
+    update();	//更新
+    draw();		//描画
 
-    //　次のフレームの間隔
-    // 1フレームにかかる時間 - 1処理にかかった時間
-    var interval = MSPF - deltaTime;
+
+    /* frame_end */
+    delta_time = (new Date()) - start_time;
+    interval = MSPF - delta_time;
+	/*--------------------------------------------------*/
 
     // 1フレームの時間が残っていたら
     if(interval > 0) 
@@ -90,20 +96,22 @@ var mainloop = function() {
 
 };
 
+/* 描画 */
+function draw() {
 
-//	描画関数を定義
-function redraw() {
-
-	// 描画リセット
+	/* reset */
 	ctxCanvas.clearRect(0,0,playGround.width,playGround.height);
 
 	// プレイヤーの描画
 	drawPlayer(player1.posx, player1.posy);
 	drawPlayer(player2.posx, player2.posy);
 
+	/* 弾 */
+	if (bullet_flag) { drawBullet(_bullet.posx, _bullet.posy); }
+
 	end_time = new Date();
 
-	//	1秒(1000ミリ秒)経過したら
+	/*
 	if (end_time - set_time >= 1000)
 	 {
 		//console.log("end_time = " + end_time);
@@ -114,11 +122,22 @@ function redraw() {
 		count = 0;			//　フレーム数のリセット
 		set_time = end_time // １フレーム目の時間のセット
 	}
+	*/
 
 };
 
+function drawBullet(posx, posy) {
+		if(!playGround || !playGround.getContext){
+		console.log("false");
+		return false;
+	};
 
-//	描画処理の定義
+	ctxCanvas.beginPath();
+	ctxCanvas.arc(posx, posy, 10, 0, Math.PI * 2, false);
+	ctxCanvas.stroke();
+}
+
+/* players_draw */
 function drawPlayer(posx, posy){
 	if(!playGround || !playGround.getContext){
 		console.log("false");
@@ -131,60 +150,78 @@ function drawPlayer(posx, posy){
 	
 };
 
+/* */
 function Controler(){
 
-	//	キーが押されたとき？
+	//	キーが押されたとき
 	$(window).keydown(function(e) {
 
-		//　← キーが押されたとき
-		if (e.keyCode == 37) {
-			left_flag = 1;	// ← キーフラグをオン	
+		//　← キー
+		if (e.keyCode == 37 && !left_flag) {
+			left_flag = true;
+			console.log("hidari");
 		}
 
-		//　→ キーが押されたとき
-		if (e.keyCode == 39) {
-			right_flag = 1;	//　→　キーフラグをオン
+		//　→ キー
+		if (e.keyCode == 39 && !right_flag) {
+			right_flag = true;
+			console.log("migi");
 		}
 
-		//　↑ キーが押されたとき
-		if (e.keyCode == 38) {
-			up_flag = 1;	// ↑ キーフラグをオン
+		//　↑ キーが
+		if (e.keyCode == 38 && !up_flag) {
+			up_flag = true;	
+			console.log("ue");
 		}
 
-		//　↓ キーが押されたとき
-		if (e.keyCode == 40) {
-			down_flag = 1;	//　↓ キーフラグをオン
+		//　↓ キー
+		if (e.keyCode == 40 && !down_flag) {
+			down_flag = true;
+			console.log("sita")	
+		}
+
+
+		/* 弾が装填されていて、spacekeyが押されたとき*/
+		if (e.keyCode == 32 && !bullet_flag) {
+			bullet_flag = true;	//弾発射
+
+			console.log("spac");
+			/* 発射位置取得 */
+			_bullet.posx = player1.posx;
+			_bullet.posy = player1.posy;
 		}
 	});
 
-	// キーが離されたとき？
+	// キーが離されたとき
 	$(window).keyup(function(e){
 
-		//　← キーが押されたとき
+		//　← キー
 		if (e.keyCode == 37) {
-			left_flag = 0;	// ← キーフラグをオフ
+			left_flag = false;	
 		}
 
-		//　→ キーが押されたとき
+		//　→ キー
 		if (e.keyCode == 39) {
-			right_flag = 0; //　→　キーフラグをオフ
+			right_flag = false; 
 		}
 
-		//　↑ キーが押されたとき
+		//　↑ キー
 		if (e.keyCode == 38) {
-			up_flag = 0;	// ↑ キーフラグをオフ
+			up_flag = false;	
 		}
 
-		//　↓ キーが押されたとき
+		//　↓ キー
 		if (e.keyCode == 40) {
-			down_flag = 0;	//　↓ キーフラグをオフ
+			down_flag = false;	
 		}
+
 	});
 
 };
 
-//	移動処理
-function move() {
+
+/* */
+function update() {
 
 	/*
 	*	更新できる場所であるか
@@ -192,20 +229,25 @@ function move() {
 	*	MOVE ... 移動量
 	*/
 	
-	if (left_flag == 1 && player1.posx > 40) {
+	if (left_flag && player1.posx > 40) {
 		 player1.posx -= MOVE;
 	}
 
-	if (right_flag == 1 && player1.posx < 460) {
+	if (right_flag && player1.posx < 460) {
 		player1.posx += MOVE;
 	}
 
-	if (up_flag == 1 && player1.posy > 40) {
+	if (up_flag && player1.posy > 40) {
 		player1.posy -= MOVE;
 	}
 
-	if (down_flag == 1 && player1.posy < 460) {
+	if (down_flag && player1.posy < 460) {
 		player1.posy += MOVE;
 	}
+
+	/* 弾の更新 */
+	if (bullet_flag && _bullet.posx <= 1000) {
+		_bullet.posx += MOVE * 10;
+	} else { bullet_flag = false; }
 
 };
