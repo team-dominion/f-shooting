@@ -8,8 +8,8 @@ server.listen(3000);
 exp.use(express.static(__dirname + '/public'));
 
 io.sockets.on('connection', function(socket){
-  socket.on('emit_from_client', function(data){
-    io.sockets.emit('emit_from_server', 'hello from server: ' + data);
+  socket.on('send_position', function(data){
+    io.sockets.emit('receive_position', data);
   });
 })
 

@@ -51,6 +51,7 @@ $(function(){
 	player2 = new player(750, 250);
 	_bullet = new bullet(0, 0);
 
+	Connect();
 	mainloop();
 	Controler();
 });
@@ -61,13 +62,13 @@ var mainloop = function() {
 	/* frame_config */
 	if (count == 0) { set_time = new Date(); }
 
-
-
 	/*--------------------------------------------------*/
     start_time = new Date();
     /* frame_start */
     update();	//更新
     draw();		//描画
+    sendPosition();
+
 
     /* frame_end */
     delta_time = (new Date()) - start_time;
@@ -151,7 +152,7 @@ function drawPlayer(posx, posy){
 function Controler(){
 
 	//	キーが押されたとき
-	onkeydown = function(e) {
+	onKeyDown = function(e) {
 
 		//　← キー
 		if (e.keyCode == 37 && !left_flag) {
@@ -190,7 +191,7 @@ function Controler(){
 	};
 
 	// キーが離されたとき
-	onkeyup = function(e){
+	onKeyUp = function(e){
 
 		//　← キー
 		if (e.keyCode == 37) {
@@ -213,6 +214,9 @@ function Controler(){
 		}
 
 	};
+
+	document.addEventListener("keydown", onKeyDown, false);
+	document.addEventListener("keyup", onKeyUp, false);
 
 };
 
@@ -249,12 +253,23 @@ function update() {
 
 };
 
-document.addEventListener("keydown",onKeyDown,false);
-document.addEventListener("keyup",onKeyUp,false);
+function Connect(){
+	var socket = io.connect();
 
-// サーバーとの同期
-// function communicateWithServer(){
-// 	//座標の送信
-// 	var socket = io.connect();
-// 	socket.emit('send_position', player1);
-// }
+	socket.on('connect', function() {
+	    socket.emit('set name', 'rauchg');
+	    socket.on('ready', function (msg) {
+	    	socket.emit('get name');
+	    });
+	    socket.on('name', function (name) {
+			console.log('name is', name);
+	    });
+	});
+	socket.on('receive_position', function(data){
+		$("#position").text("POSX: " + data.posx + ", POSY: " + data.posy);
+	});
+
+	sendPosition = function(){
+		socket.emit('send_position', player1);
+	}
+}
