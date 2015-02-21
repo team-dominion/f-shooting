@@ -9,7 +9,7 @@ exp.use(express.static(__dirname + '/public'));
 
 io.sockets.on('connection', function(socket){
   socket.on('send_position', function(data){
-    io.sockets.emit('receive_position', data);
+    socket.broadcast.emit('receive_position', data);
   });
 })
 
