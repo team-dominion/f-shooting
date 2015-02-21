@@ -13,10 +13,6 @@ var bullet_flag = false;
 var bulett_number = 5;
 var nextbullet = 0;
 
-/* canvas */
-var playGround = $('#play-ground').get(0);
-var ctxCanvas = playGround.getContext('2d');
-
 /* fps-parameter */
 const FPS = 30;
 const MSPF = 1000 / FPS;
@@ -46,14 +42,18 @@ bullet = function(posx, posy) {
 
 /*=============================================================================================*/
 $(function(){
-  var player1 = new player(250, 250);
-  var player2 = new player(750, 250);
+  /* canvas */
+  playGround = $('#play-ground').get(0);
+  ctxCanvas = playGround.getContext('2d');
+
+  player1 = new player(250, 250);
+  player2 = new player(750, 250);
 
   for(i=0;i<bulett_number;i++){
     bullet[i] = new bullet(0, 0,false);
-  }
+  };
 
-  Connect();
+  //Connect();
   mainloop();
   Controler();
 });
@@ -71,7 +71,7 @@ var mainloop = function() {
   /* frame_start */
   update();
   draw();
-  sendPosition();
+  //sendPosition();
   /* frame_end */
 
   delta_time = (new Date()) - start_time;
@@ -97,9 +97,12 @@ function draw() {
   drawPlayer(player2.posx, player2.posy);
 
   /* bullet */
-  if (bullet_flag) {
-    drawBullet(_bullet.posx, _bullet.posy);
+  for(i=0;i<bulett_number;i++){
+    if (bullet[i].bullet_flag) { 
+      drawBullet(bullet[i].posx, bullet[i].posy)
+    };
   }
+
 
   end_time = new Date();
 };
