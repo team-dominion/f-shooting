@@ -6,11 +6,12 @@
 //***************************************
 
 /* player */
-const MOVE = 5;
+const MOVE = 20;
 
 /* bullet */
 var bullet_flag = false;  
 var bulett_number = 5;
+var bullet_speed = 10;
 var nextbullet = 0;
 
 /* fps-parameter */
@@ -23,6 +24,11 @@ var count = 0;
 var start_time;
 var delta_time;
 var interval;
+
+/*charge*/
+var charge_flag = false;
+var charge_number = 3;
+var charge_time = 0;
 
 /* input_key_flag */
 var up_flag   = false;
@@ -133,6 +139,14 @@ function drawPlayer(posx, posy){
 function Controler(){
 
   onKeyDown = function(e) {
+
+    //c キー
+    if(e.keyCode == 67){
+      charge_flag = true;
+      charge_number++;
+      console.log(charge_flag);
+    }
+
     // ← キー
     if (e.keyCode == 37 && !left_flag) {
       left_flag = true;
@@ -153,80 +167,82 @@ function Controler(){
       down_flag = true;
     }
 
+    if(!charge_flag){
+      /* 弾が装填されていて、spacekeyが押されたとき*/
+      if (e.keyCode == 90 && charge_number > 0) {
 
-    /* 弾が装填されていて、spacekeyが押されたとき*/
-    if (e.keyCode == 90) {
+        for (i=0;i<bulett_number;i++){
+          console.log("bullet_"+i);
 
-      for (i=0;i<bulett_number;i++){
-        console.log("bullet_"+i);
+          if(!bullet[i].bullet_flag){
+            bullet[i].bullet_flag = true;
+            console.log("shot");
 
-        if(!bullet[i].bullet_flag){
-          bullet[i].bullet_flag = true;
-          console.log("shot");
+            /* 発射位置取得 */
+            bullet[i].posx = player1.posx;
+            bullet[i].posy = player1.posy;
+            charge_number--;
 
-          /* 発射位置取得 */
-          bullet[i].posx = player1.posx;
-          bullet[i].posy = player1.posy;
-
-          break;
+            break;
+          }
         }
       }
     }
-
-  };
+};
 
   onKeyUp = function(e){
 
-    // ← キー
-    if (e.keyCode == 37) {
-      left_flag = false;  
-    }
+      // ← キー
+     if (e.keyCode == 37) {
+       left_flag = false;  
+     }
 
-    // → キー
-    if (e.keyCode == 39) {
-      right_flag = false; 
-    }
+      // → キー
+     if (e.keyCode == 39) {
+       right_flag = false; 
+     }
 
-    // ↑ キー
-    if (e.keyCode == 38) {
-      up_flag = false;  
-    }
+      // ↑ キー
+     if (e.keyCode == 38) {
+       up_flag = false;  
+     }
 
-    // ↓ キー
-    if (e.keyCode == 40) {
-      down_flag = false;  
-    }
-
+      // ↓ キー
+     if (e.keyCode == 40) {
+       down_flag = false;  
+     }
   };
 
   document.addEventListener("keydown", onKeyDown, false);
   document.addEventListener("keyup", onKeyUp, false);
-
 };
 
 /*=============================================================================================*/
 function update() {
   /* プレイヤーの更新 */
-  if (left_flag && player1.posx > 40) {
-    player1.posx -= MOVE;
-  }
 
-  if (right_flag && player1.posx < 460) {
-    player1.posx += MOVE;
-  }
+  Charge();
+  if(!charge_flag){
+    if (left_flag && player1.posx > 40) {
+      player1.posx -= MOVE;
+    }
 
-  if (up_flag && player1.posy > 40) {
-    player1.posy -= MOVE;
-  }
+    if (right_flag && player1.posx < 460) {
+      player1.posx += MOVE;
+    }
 
-  if (down_flag && player1.posy < 460) {
-    player1.posy += MOVE;
-  }
+    if (up_flag && player1.posy > 40) {
+      player1.posy -= MOVE;
+    }
 
+    if (down_flag && player1.posy < 460) {
+      player1.posy += MOVE;
+    }
+  }
   /* 弾の更新 */
   for(i=0;i<bulett_number;i++){
     if (bullet[i].bullet_flag && bullet[i].posx <= 1000) {
-      bullet[i].posx += MOVE * 10;
+      bullet[i].posx += bullet_speed * 10;
     } else {
       bullet[i].bullet_flag = false;
     }
@@ -252,3 +268,14 @@ function Connect(){
     $("#userid").text(socket.id);
   });
 };
+
+function Charge (){
+
+  if(charge_flag){
+  charge_time++;
+  }
+  if(charge_time >= 15){
+    charge_time = 0;
+    charge_flag = false;
+  }
+}
