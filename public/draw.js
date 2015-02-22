@@ -140,13 +140,6 @@ function Controler(){
 
   onKeyDown = function(e) {
 
-    //c キー
-    if(e.keyCode == 67){
-      charge_flag = true;
-      charge_number++;
-      console.log(charge_flag);
-    }
-
     // ← キー
     if (e.keyCode == 37 && !left_flag) {
       left_flag = true;
@@ -168,6 +161,14 @@ function Controler(){
     }
 
     if(!charge_flag){
+
+      //c キー
+      if(e.keyCode == 67){
+        charge_flag = true;
+        charge_number++;
+        console.log(charge_flag);
+      }
+
       /* 弾が装填されていて、spacekeyが押されたとき*/
       if (e.keyCode == 90 && charge_number > 0) {
 
@@ -188,7 +189,7 @@ function Controler(){
         }
       }
     }
-};
+  };
 
   onKeyUp = function(e){
 
