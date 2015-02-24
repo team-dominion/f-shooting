@@ -9,17 +9,17 @@
 const MOVE = 20;
 
 /* bullet */
-var bullet_flag = false;  
+var bullet_flag = false; 
 var bulett_number = 5;
 var bullet_speed = 10;
 var nextbullet = 0;
 
 /* fps-parameter */
-const FPS = 30;
+const FPS  = 30;
 const MSPF = 1000 / FPS;
+var count  = 0;
 var set_time;
 var end_time;
-var count = 0;
 
 var start_time;
 var delta_time;
@@ -31,15 +31,18 @@ var charge_number = 3;
 var charge_time = 0;
 
 /* input_key_flag */
-var up_flag   = false;
-var down_flag   = false;
-var right_flag   = false;
-var left_flag   = false;
+var up_flag    = false;
+var down_flag  = false;
+var right_flag = false;
+var left_flag  = false;
 
 /* definition */
-player = function(posx, posy) {
-    this.posx = posx;
-    this.posy = posy;
+player = function(posx, posy, userid, hostid, state) {
+    this.posx   = posx;
+    this.posy   = posy;
+    this.userid = userid;
+    this.hostid = hostid;
+    this.state  = state;  //wait, host, join, play, dead
 }
 bullet = function(posx, posy) {
   this.posx = posx;
@@ -50,7 +53,7 @@ bullet = function(posx, posy) {
 $(function(){
   /* canvas */
   playGround = $('#play-ground').get(0);
-  ctxCanvas = playGround.getContext('2d');
+  ctxCanvas  = playGround.getContext('2d');
 
   player1 = new player(250, 250);
   player2 = new player(750, 250);
@@ -68,7 +71,7 @@ $(function(){
 var mainloop = function() {
 
   /* frame_config */
-  if (count == 0) {
+  if (count === 0) {
     set_time = new Date(); 
   }
 
@@ -141,22 +144,22 @@ function Controler(){
   onKeyDown = function(e) {
 
     // ← キー
-    if (e.keyCode == 37 && !left_flag) {
+    if (e.keyCode === 37 && !left_flag) {
       left_flag = true;
     }
 
     // → キー
-    if (e.keyCode == 39 && !right_flag) {
+    if (e.keyCode === 39 && !right_flag) {
       right_flag = true;
     }
 
     // ↑ キー
-    if (e.keyCode == 38 && !up_flag) {
+    if (e.keyCode === 38 && !up_flag) {
       up_flag = true;
     }
 
     // ↓ キー
-    if (e.keyCode == 40 && !down_flag) {
+    if (e.keyCode === 40 && !down_flag) {
       down_flag = true;
     }
 
@@ -193,25 +196,25 @@ function Controler(){
 
   onKeyUp = function(e){
 
-      // ← キー
-     if (e.keyCode == 37) {
-       left_flag = false;  
-     }
+    // ← キー
+    if (e.keyCode === 37) {
+      left_flag = false;  
+    }
 
-      // → キー
-     if (e.keyCode == 39) {
-       right_flag = false; 
-     }
+    // → キー
+    if (e.keyCode === 39) {
+      right_flag = false; 
+    }
 
-      // ↑ キー
-     if (e.keyCode == 38) {
-       up_flag = false;  
-     }
+    // ↑ キー
+    if (e.keyCode === 38) {
+      up_flag = false;  
+    }
 
-      // ↓ キー
-     if (e.keyCode == 40) {
-       down_flag = false;  
-     }
+    // ↓ キー
+    if (e.keyCode === 40) {
+      down_flag = false;  
+    }
   };
 
   document.addEventListener("keydown", onKeyDown, false);
@@ -254,8 +257,10 @@ function update() {
 /*=============================================================================================*/
 function Connect(){
   var socket = io.connect();
+  player1.userid = socket.id;
+  player1.state = 'wait';
 
-  var sendPosition = function(){
+  sendPosition = function(){
     socket.emit('send_position', player1);
   }
 
@@ -263,10 +268,10 @@ function Connect(){
     socket.on('receive_position', function(data){
       player2.posx = data.posx + 500;
       player2.posy = data.posy;
-      $("#position").text("POSX: " + player2.posx + ", POSY: " + player1.posy);
+      $("#position").text("POSX: " + player2.posx + ", POSY: " + player2.posy);
     });
 
-    $("#userid").text(socket.id);
+    $("#userid").text(player1.userid);
   });
 };
 
