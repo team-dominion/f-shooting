@@ -6,17 +6,17 @@
 //***************************************
 
 /* player */
-const MOVE = 20;
+var MOVE = 20;
 
 /* bullet */
 var bullet_flag = false; 
-var bulett_number = 5;
+var bullet_number = 5;
 var bullet_speed = 10;
 var nextbullet = 0;
 
 /* fps-parameter */
-const FPS  = 30;
-const MSPF = 1000 / FPS;
+var FPS  = 30;
+var MSPF = 1000 / FPS;
 var count  = 0;
 var set_time;
 var end_time;
@@ -58,7 +58,7 @@ $(function(){
   player1 = new player(250, 250);
   player2 = new player(750, 250);
 
-  for(i=0;i<bulett_number;i++){
+  for(i=0;i<bullet_number;i++){
     bullet[i] = new bullet(0, 0,false);
   };
 
@@ -106,7 +106,7 @@ function draw() {
   drawPlayer(player2.posx, player2.posy);
 
   /* bullet */
-  for(i=0;i<bulett_number;i++){
+  for(i=0;i<bullet_number;i++){
     if (bullet[i].bullet_flag) { 
       drawBullet(bullet[i].posx, bullet[i].posy)
     };
@@ -175,7 +175,7 @@ function Controler(){
       /* 弾が装填されていて、spacekeyが押されたとき*/
       if (e.keyCode == 90 && charge_number > 0) {
 
-        for (i=0;i<bulett_number;i++){
+        for (i=0;i<bullet_number;i++){
           console.log("bullet_"+i);
 
           if(!bullet[i].bullet_flag){
@@ -244,7 +244,7 @@ function update() {
     }
   }
   /* 弾の更新 */
-  for(i=0;i<bulett_number;i++){
+  for(i=0;i<bullet_number;i++){
     if (bullet[i].bullet_flag && bullet[i].posx <= 1000) {
       bullet[i].posx += bullet_speed * 10;
     } else {
