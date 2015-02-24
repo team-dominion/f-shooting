@@ -101,6 +101,15 @@ function draw() {
   /* reset */
   ctxCanvas.clearRect(0,0,playGround.width,playGround.height);
 
+  /* draw text */
+  ctxCanvas.font="20px Arial";
+  ctxCanvas.fillText("CHARGE " + charge_number, 5, 25);
+
+  /* path */
+  ctxCanvas.moveTo(500, 0);
+  ctxCanvas.lineTo(500, 500);
+  ctxCanvas.stroke();
+
   /* draw player */
   drawPlayer(player1.posx, player1.posy);
   drawPlayer(player2.posx, player2.posy);
@@ -243,6 +252,7 @@ function update() {
       player1.posy += MOVE;
     }
   }
+
   /* 弾の更新 */
   for(i=0;i<bullet_number;i++){
     if (bullet[i].bullet_flag && bullet[i].posx <= 1000) {
@@ -275,12 +285,12 @@ function Connect(){
   });
 };
 
-function Charge (){
+function Charge(){
 
-  if(charge_flag){
-  charge_time++;
+  if (charge_flag) {
+    charge_time++;
   }
-  if(charge_time >= 15){
+  if (charge_time >= 15) {
     charge_time = 0;
     charge_flag = false;
   }
