@@ -194,7 +194,7 @@ function Controler(){
         charge_number++;
         console.log(charge_flag);
       }
-      if(e.keyCode == 88){
+      if(e.keyCode == 88 && big_flag == 0){
         big_flag = 1;
       }
 
@@ -244,15 +244,15 @@ function Controler(){
 
     if(e.keyCode == 88){
       console.log("big flag"+big_flag);
-      if (big_flag == 2){
-        big_flag = 0;
+      if (big_flag == 2 && charge_number >= 2){
+        charge_number -= 2;
         big_bullet.bullet_flag = true;
         big_bullet.posx = player1.posx;
         big_bullet.posy = player1.posy;
       }else if(big_flag == 1)  {
-        big_flag　= 0;
         console.log(big_count);
       }
+      big_flag = 0;
     }
   };
 
@@ -262,13 +262,9 @@ function Controler(){
 
 /*=============================================================================================*/
 function update() {
-
-<<<<<<< HEAD
   Count();
-=======
   /* プレイヤーの更新 */
-  Charge();
->>>>>>> origin/express
+  Count();
   if(!charge_flag){
     if (left_flag && player1.posx > 40) {
       player1.posx -= MOVE;
@@ -333,10 +329,9 @@ function Count(){
     charge_flag = false;
   }
 }
-  if(big_flag == 1){
+  if(big_flag == 1 && big_count< 60){
     big_count++;
-    if(big_count >= 60){
-      big_count = 0;
+    if(big_count == 59){
       big_flag　= 2;
     }
   }else{big_count = 0;}
