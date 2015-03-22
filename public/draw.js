@@ -190,6 +190,7 @@ function Controler(){
     if(!charge_flag){
       //c キー
       if(e.keyCode == 67){
+        big_flag = 0;
         charge_flag = true;
         charge_number++;
         console.log(charge_flag);
@@ -200,6 +201,7 @@ function Controler(){
 
       /* 弾が装填されていて、Zが押されたとき*/
       if (e.keyCode == 90 && charge_number > 0) {
+        big_flag = 0;
         for (i=0;i<bullet_number;i++){
           console.log("bullet_"+i);
 
