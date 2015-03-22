@@ -9,10 +9,10 @@
 var MOVE = 20;
 
 /* bullet */
-var bullet_flag = false; 
 var bullet_number = 5;
 var bullet_speed = 10;
-var nextbullet = 0;
+var big_flag = 0;// 0 X待機中  1 溜めカウント中  2 発射可能  
+var big_count = 0;
 
 /* fps-parameter */
 var FPS  = 30;
@@ -44,9 +44,10 @@ player = function(posx, posy, userid, hostid, state) {
     this.hostid = hostid;
     this.state  = state;  //wait, host, join, play, dead
 }
-bullet = function(posx, posy) {
+bullet = function(posx, posy,bullet_flag) {
   this.posx = posx;
   this.posy = posy;
+  this.bullet_flag = bullet_flag;
 }
 
 /*=============================================================================================*/
@@ -61,6 +62,7 @@ $(function(){
   for(i=0;i<bullet_number;i++){
     bullet[i] = new bullet(0, 0,false);
   };
+  big_bullet = new bullet(0,0,false);
 
   //Connect();
   mainloop();
@@ -119,6 +121,9 @@ function draw() {
     if (bullet[i].bullet_flag) { 
       drawBullet(bullet[i].posx, bullet[i].posy)
     };
+  if(big_bullet.bullet_flag){
+    drawBigBullet(big_bullet.posx,big_bullet.posy);
+    }
   }
 
 
@@ -135,6 +140,16 @@ function drawBullet(posx, posy) {
   ctxCanvas.arc(posx, posy, 10, 0, Math.PI * 2, false);
   ctxCanvas.stroke();
 };
+
+function drawBigBullet(posx, posy){
+  if(!playGround || !playGround.getContext){
+    console.log("drawBullet_false");
+    return false;
+  };
+  ctxCanvas.beginPath();
+  ctxCanvas.arc(posx,posy,40,0,Math.PI * 2, false);
+  ctxCanvas.stroke();
+}
 
 function drawPlayer(posx, posy){
   if(!playGround || !playGround.getContext){
@@ -173,17 +188,18 @@ function Controler(){
     }
 
     if(!charge_flag){
-
       //c キー
       if(e.keyCode == 67){
         charge_flag = true;
         charge_number++;
         console.log(charge_flag);
       }
+      if(e.keyCode == 88){
+        big_flag = 1;
+      }
 
-      /* 弾が装填されていて、spacekeyが押されたとき*/
+      /* 弾が装填されていて、Zが押されたとき*/
       if (e.keyCode == 90 && charge_number > 0) {
-
         for (i=0;i<bullet_number;i++){
           console.log("bullet_"+i);
 
@@ -200,6 +216,7 @@ function Controler(){
           }
         }
       }
+
     }
   };
 
@@ -224,6 +241,19 @@ function Controler(){
     if (e.keyCode === 40) {
       down_flag = false;  
     }
+
+    if(e.keyCode == 88){
+      console.log("big flag"+big_flag);
+      if (big_flag == 2){
+        big_flag = 0;
+        big_bullet.bullet_flag = true;
+        big_bullet.posx = player1.posx;
+        big_bullet.posy = player1.posy;
+      }else if(big_flag == 1)  {
+        big_flag　= 0;
+        console.log(big_count);
+      }
+    }
   };
 
   document.addEventListener("keydown", onKeyDown, false);
@@ -233,8 +263,12 @@ function Controler(){
 /*=============================================================================================*/
 function update() {
 
+<<<<<<< HEAD
+  Count();
+=======
   /* プレイヤーの更新 */
   Charge();
+>>>>>>> origin/express
   if(!charge_flag){
     if (left_flag && player1.posx > 40) {
       player1.posx -= MOVE;
@@ -261,6 +295,11 @@ function update() {
       bullet[i].bullet_flag = false;
     }
   }
+  if(big_bullet.bullet_flag &&big_bullet.posx <= 1000) {
+    big_bullet.posx += bullet_speed * 10;
+  }else{
+    big_bullet.bullet_flag = false;
+  }
 
 };
 
@@ -285,13 +324,20 @@ function Connect(){
   });
 };
 
-function Charge(){
+function Count(){
 
   if (charge_flag) {
     charge_time++;
-  }
   if (charge_time >= 15) {
     charge_time = 0;
     charge_flag = false;
   }
+}
+  if(big_flag == 1){
+    big_count++;
+    if(big_count >= 60){
+      big_count = 0;
+      big_flag　= 2;
+    }
+  }else{big_count = 0;}
 }
