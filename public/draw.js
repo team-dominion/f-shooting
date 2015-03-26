@@ -10,31 +10,29 @@ var MOVE = 25;
 
 /* bullet */
 var bullet_number = 5;
-var bullet_speed = 10;
-var big_flag = 0;// 0 X待機中  1 溜めカウント中  2 発射可能  
-var big_count = 0;
+var bullet_speed  = 10;
+var big_flag      = 0; // 0 X待機中  1 溜めカウント中  2 発射可能  
+var big_count     = 0;
+var charge_number = 3;
+var charge_time   = 0;
 
 /* fps-parameter */
-var FPS  = 30;
-var MSPF = 1000 / FPS;
+var FPS    = 30;
+var MSPF   = 1000 / FPS;
 var count  = 0;
+
 var set_time;
 var end_time;
-
 var start_time;
 var delta_time;
 var interval;
 
-/*charge*/
-var charge_flag = false;
-var charge_number = 3;
-var charge_time = 0;
-
 /* input_key_flag */
-var up_flag    = false;
-var down_flag  = false;
-var right_flag = false;
-var left_flag  = false;
+var up_flag       = false;
+var down_flag     = false;
+var right_flag    = false;
+var left_flag     = false;
+var charge_flag   = false;
 
 /* definition */
 player = function(posx, posy, userid, hostid, state) {
@@ -59,7 +57,7 @@ $(function(){
   player1 = new player(250, 250);
   player2 = new player(750, 250);
 
-  for(i=0;i<bullet_number;i++){
+  for (i = 0; i < bullet_number; i++) {
     bullet[i] = new bullet(0, 0,false);
   };
   big_bullet = new bullet(0,0,false);
@@ -82,7 +80,6 @@ var mainloop = function() {
   /* frame_start */
   update();
   draw();
-  //sendPosition();
   /* frame_end */
 
   delta_time = (new Date()) - start_time;
@@ -90,7 +87,7 @@ var mainloop = function() {
 
 
   // 1フレームの時間が残っていたら
-  if(interval > 0) {
+  if (interval > 0) {
     setTimeout(mainloop, interval);
   } else {
     setTimeout(mainloop, MSPF + interval);
@@ -104,7 +101,7 @@ function draw() {
   ctxCanvas.clearRect(0,0,playGround.width,playGround.height);
 
   /* draw text */
-  ctxCanvas.font="20px Arial";
+  ctxCanvas.font = "20px Arial";
   ctxCanvas.fillText("CHARGE " + charge_number, 5, 25);
 
   /* path */
@@ -117,21 +114,20 @@ function draw() {
   drawPlayer(player2.posx, player2.posy);
 
   /* bullet */
-  for(i=0;i<bullet_number;i++){
+  for ( i = 0; i < bullet_number; i++) {
     if (bullet[i].bullet_flag) { 
       drawBullet(bullet[i].posx, bullet[i].posy)
     };
-  if(big_bullet.bullet_flag){
-    drawBigBullet(big_bullet.posx,big_bullet.posy);
+    if (big_bullet.bullet_flag) {
+      drawBigBullet(big_bullet.posx,big_bullet.posy);
     }
   }
-
 
   end_time = new Date();
 };
 
 function drawBullet(posx, posy) {
-  if(!playGround || !playGround.getContext){
+  if (!playGround || !playGround.getContext) {
     console.log("drawBullet_false");
     return false;
   };
@@ -142,7 +138,7 @@ function drawBullet(posx, posy) {
 };
 
 function drawBigBullet(posx, posy){
-  if(!playGround || !playGround.getContext){
+  if (!playGround || !playGround.getContext) {
     console.log("drawBullet_false");
     return false;
   };
@@ -152,7 +148,7 @@ function drawBigBullet(posx, posy){
 }
 
 function drawPlayer(posx, posy){
-  if(!playGround || !playGround.getContext){
+  if (!playGround || !playGround.getContext) {
     console.log("drawPlayer_false");
     return false;
   };
@@ -187,25 +183,25 @@ function Controler(){
       down_flag = true;
     }
 
-    if(!charge_flag){
+    if (!charge_flag) {
       //c キー
-      if(e.keyCode == 67){
+      if (e.keyCode === 67) {
         big_flag = 0;
         charge_flag = true;
         charge_number++;
         console.log(charge_flag);
       }
-      if(e.keyCode == 88 && big_flag == 0){
+      if (e.keyCode === 88 && big_flag === 0) {
         big_flag = 1;
       }
 
       /* 弾が装填されていて、Zが押されたとき*/
-      if (e.keyCode == 90 && charge_number > 0) {
+      if (e.keyCode === 90 && charge_number > 0) {
         big_flag = 0;
         for (i=0;i<bullet_number;i++){
           console.log("bullet_"+i);
 
-          if(!bullet[i].bullet_flag){
+          if (!bullet[i].bullet_flag) {
             bullet[i].bullet_flag = true;
             console.log("shot");
 
@@ -244,16 +240,18 @@ function Controler(){
       down_flag = false;  
     }
 
-    if(e.keyCode == 88){
+    if (e.keyCode === 88) {
       console.log("big flag"+big_flag);
-      if (big_flag == 2 && charge_number >= 2){
+
+      if (big_flag === 2 && charge_number >= 2){
         charge_number -= 2;
         big_bullet.bullet_flag = true;
         big_bullet.posx = player1.posx;
         big_bullet.posy = player1.posy;
-      }else if(big_flag == 1)  {
+      } else if (big_flag === 1)  {
         console.log(big_count);
       }
+
       big_flag = 0;
     }
   };
@@ -337,10 +335,12 @@ function Count(){
     charge_flag = false;
   }
 }
-  if(big_flag == 1 && big_count< 60){
+  if (big_flag === 1 && big_count < 60) {
     big_count++;
-    if(big_count == 59){
-      big_flag　= 2;
+    if (big_count === 59) {
+      big_flag = 2;
     }
-  }else{big_count = 0;}
+  } else {
+    big_count = 0;
+  }
 }
