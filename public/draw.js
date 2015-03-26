@@ -6,7 +6,7 @@
 //***************************************
 
 /* player */
-var MOVE = 20;
+var MOVE = 25;
 
 /* bullet */
 var bullet_number = 5;
@@ -64,7 +64,7 @@ $(function(){
   };
   big_bullet = new bullet(0,0,false);
 
-  //Connect();
+  Connect();
   mainloop();
   Controler();
 });
@@ -303,6 +303,12 @@ function update() {
 
 /*=============================================================================================*/
 function Connect(){
+
+  if (typeof io === "undefined") {
+    console.log("connetion failed");
+    return;
+  }
+
   var socket = io.connect();
   player1.userid = socket.id;
   player1.state = 'wait';
