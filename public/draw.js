@@ -51,8 +51,8 @@ bullet = function(posx, posy,bullet_flag) {
 /*=============================================================================================*/
 $(function(){
   /* canvas */
-  playGround = $('#play-ground').get(0);
-  ctxCanvas  = playGround.getContext('2d');
+  playGround = $("#play-ground").get(0);
+  ctxCanvas  = playGround.getContext("2d");
 
   player1 = new player(250, 250);
   player2 = new player(750, 250);
@@ -309,14 +309,14 @@ function Connect(){
 
   var socket = io.connect();
   player1.userid = socket.id;
-  player1.state = 'wait';
+  player1.state = "wait";
 
   sendPosition = function(){
-    socket.emit('send_position', player1);
+    socket.emit("send_position", player1);
   }
 
-  socket.on('connect', function() {
-    socket.on('receive_position', function(data){
+  socket.on("connect", function() {
+    socket.on("receive_position", function(data){
       player2.posx = data.posx + 500;
       player2.posy = data.posy;
       $("#position").text("POSX: " + player2.posx + ", POSY: " + player2.posy);
