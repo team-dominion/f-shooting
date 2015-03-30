@@ -1,0 +1,27 @@
+ <!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<title>Socket.io</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="draw.js"></script>
+</head>
+<body>
+	<div id="wrap">
+			<canvas id="play-ground" width="1000" height="500"></canvas>
+		<form id="myForm">
+			<input type="text" id="msg"><input type="submit" value="Send!">
+		</form>
+		<ul>
+			<li id="position"></li>
+			<li id="userid"></li>
+		</ul>
+	</div>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		$(function() {
+		});
+	</script>
+</body>
+</html>
