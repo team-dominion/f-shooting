@@ -318,7 +318,7 @@ function Connect(){
 
   socket.on("connect", function() {
     socket.on("receive_position", function(data){
-      player2.posx = data.posx + 500;
+      player2.posx = 1000 - data.posx;
       player2.posy = data.posy;
       $("#position").text("POSX: " + player2.posx + ", POSY: " + player2.posy);
     });
