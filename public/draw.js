@@ -80,6 +80,7 @@ var mainloop = function() {
   /* frame_start */
   update();
   draw();
+  sendPosition();
   /* frame_end */
 
   delta_time = (new Date()) - start_time;
