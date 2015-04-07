@@ -304,17 +304,19 @@ function update() {
 function Connect(){
 
   if (typeof io === "undefined") {
+    sendPosition = function(){}
     console.log("connetion failed");
     return;
+
+  } else {
+    sendPosition = function(){
+      socket.emit("send_position", player1);
+    }
   }
 
   var socket = io.connect();
   player1.userid = socket.id;
   player1.state = "wait";
-
-  sendPosition = function(){
-    socket.emit("send_position", player1);
-  }
 
   socket.on("connect", function() {
     socket.on("receive_position", function(data){
